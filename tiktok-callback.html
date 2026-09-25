@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Draya_tiktok — Authorisation</title>
+<style>
+  :root { color-scheme: light dark; --bg:#fbfbfd; --fg:#1d1d20; --muted:#5a5a66; --line:#e3e3ea; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#141417; --fg:#ececf1; --muted:#a0a0ad; --line:#2c2c33; }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:44rem; margin:0 auto; padding:3rem 16px 4rem; }
+  h1 { font-size:1.9rem; margin:0 0 .4rem; letter-spacing:-.01em; }
+  p.lead { color:var(--muted); margin:0 0 2.5rem; }
+  h2 { font-size:1.15rem; margin:2.2rem 0 .6rem; }
+  ul { padding-left:1.2rem; }
+  footer { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line);
+           color:var(--muted); font-size:.9rem; }
+  a { color:inherit; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Authorisation code</h1>
+  <p class="lead">Copy the code below and send it back to finish connecting the account.</p>
+  <p id="err" style="color:#c33"></p>
+  <textarea id="code" readonly rows="5" style="width:100%;font:14px ui-monospace,monospace;padding:.6rem;box-sizing:border-box;background:transparent;color:inherit;border:1px solid var(--line);border-radius:6px"></textarea>
+  <p><button id="copy" style="font:inherit;padding:.5rem 1.1rem;border-radius:6px;border:1px solid var(--line);background:transparent;color:inherit">Copy</button></p>
+  <script>
+    const p = new URLSearchParams(location.search);
+    const code = p.get("code"), state = p.get("state") || "";
+    const box = document.getElementById("code");
+    if (p.get("error")) document.getElementById("err").textContent =
+      "Error: " + p.get("error") + " " + (p.get("error_description") || "");
+    box.value = code ? "code=" + code + "&state=" + state : "";
+    document.getElementById("copy").onclick = () => {
+      box.select();
+      (navigator.clipboard ? navigator.clipboard.writeText(box.value) : Promise.reject())
+        .catch(() => document.execCommand("copy"));
+    };
+  </script>
+</main>
+</body>
+</html>
